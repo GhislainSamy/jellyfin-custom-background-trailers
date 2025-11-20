@@ -5,13 +5,25 @@
     console.log('🎬 Background Trailers Plugin - Initializing...');
 
     // ===== OPTIONS =====
-    const options = {
+    // Récupérer les options depuis window.BTPluginOptions ou utiliser les valeurs par défaut
+    const defaultOptions = {
         trailerMutedByDefault: true,
         showSoundButton: true,
         enablePulseOnButton: true,
-        logoScale: 0.6,          // réduction progressive du logo (1 = 100%, 0.6 = -40%)
-        backdropTransition: 1000 // en ms
+        pulseColor: 'rgba(165, 0, 0, 1)', // Rouge vif
+        logoScale: 0.6,
+        logoShrinkDelay: 500,
+        logoShrinkDuration: 1000,
+        logoFadeOpacity: 0.5,
+        backdropTransition: 1000,
+        backdropFadeDelay: 500,
+        backdropFadeDuration: 1000,
+        backdropZoomScale: 1.15
     };
+    
+    const options = Object.assign({}, defaultOptions, window.BTPluginOptions || {});
+    
+    console.log('⚙️ Plugin options loaded:', options);
 
     // ===== STATE =====
     const state = {
@@ -57,6 +69,46 @@
         }
     }
 
+    function createPulseAnimation() {
+        // Vérifier si l'animation existe déjà
+        const styleId = 'bt-pulse-animation';
+        if (document.getElementById(styleId)) return;
+
+        // Créer la keyframe animation avec la couleur paramétrable + styles du bouton
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.textContent = `
+            @keyframes buttonGlowPulse {
+                0% { box-shadow: 0 0 0 0 ${options.pulseColor}; transform: scale(1); }
+                12.5% { box-shadow: 0 0 20px 10px ${options.pulseColor}; transform: scale(1.05); }
+                25% { box-shadow: 0 0 0 0 ${options.pulseColor}; transform: scale(1); }
+                37.5% { box-shadow: 0 0 20px 10px ${options.pulseColor}; transform: scale(1.05); }
+                50% { box-shadow: 0 0 0 0 ${options.pulseColor}; transform: scale(1); }
+                62.5% { box-shadow: 0 0 20px 10px ${options.pulseColor}; transform: scale(1.05); }
+                75% { box-shadow: 0 0 0 0 ${options.pulseColor}; transform: scale(1); }
+                87.5% { box-shadow: 0 0 20px 10px ${options.pulseColor}; transform: scale(1.05); }
+                100% { box-shadow: 0 0 0 0 ${options.pulseColor}; transform: scale(1); }
+            }
+            .btnTrailerSound.spawn-animation {
+                animation: buttonGlowPulse 5s ease-in-out 1;
+            }
+            /* Icône du bouton */
+            .btnTrailerSound .detailButton-icon {
+                font-size: 28px !important;
+                color: #fff;
+            }
+            /* Supprimer outline au focus / hover / active */
+            .btnTrailerSound:focus,
+            .btnTrailerSound:active,
+            .btnTrailerSound:hover {
+                outline: none !important;
+                box-shadow: none !important;
+            }
+        `;
+        document.head.appendChild(style);
+        console.log('✨ Pulse animation and button styles created with color:', options.pulseColor);
+    }
+
     function animateLogo() {
         console.log('🎬 Starting logo shrink animation sequence');
         
@@ -82,15 +134,148 @@
             // RESET complet
             logo.style.transition = 'none';
             logo.style.transform = 'scale(1) translate(0, 0)';
+            logo.style.opacity = '1'; // Reset opacité
             void logo.offsetWidth;
             
-            console.log('✅ Logo found and reset, animating in 500ms...');
+            console.log(`✅ Logo found and reset, animating in ${options.logoShrinkDelay}ms...`);
             
-            // Animer après un délai plus long pour être sûr
+            // Animer après le délai configuré
             setTimeout(() => {
-                logo.style.transition = 'transform 1s ease-out';
+                const duration = options.logoShrinkDuration / 1000; // convertir ms en secondes
+                logo.style.transition = `transform ${duration}s ease-out, opacity ${duration}s ease-out`;
                 logo.style.transform = `scale(${options.logoScale}) translate(-20%, -20%)`;
-                console.log('🎬 Logo shrink applied!');
+                logo.style.opacity = options.logoFadeOpacity.toString();
+                console.log(`🎬 Logo shrink applied with opacity ${options.logoFadeOpacity}!`);
+            }, options.logoShrinkDelay);
+        };
+        
+        tryAnimate();
+    }
+
+    function animateBackdrop() {
+        console.log('🖼️ Starting backdrop fade animation sequence');
+        
+        // Attendre que les backdrops soient chargés avec un retry
+        let attempts = 0;
+        const maxAttempts = 30;
+        
+        const tryAnimate = () => {
+            // Chercher TOUS les éléments backdrop possibles
+            const backdrops = document.querySelectorAll('.backdropContainer, .backdropImage, .itemBackdrop');
+            
+            if (backdrops.length === 0 && attempts < maxAttempts) {
+                attempts++;
+                console.log(`⏳ Waiting for backdrop... attempt ${attempts}`);
+                setTimeout(tryAnimate, 100);
+                return;
+            }
+            
+            if (backdrops.length === 0) {
+                console.warn('⚠️ No backdrop found after max attempts');
+                return;
+            }
+            
+            console.log(`✅ Found ${backdrops.length} backdrop element(s), resetting...`);
+            
+            // RESET complet - tous les backdrops visibles
+            backdrops.forEach(backdrop => {
+                backdrop.style.setProperty('transition', 'none');
+                backdrop.style.setProperty('opacity', '1');
+                backdrop.style.setProperty('filter', 'blur(0px) brightness(1)');
+                backdrop.style.setProperty('transform', 'scale(1)');
+                void backdrop.offsetWidth;
+            });
+            
+            console.log('✅ Backdrop(s) reset, fading out in ' + options.backdropFadeDelay + 'ms...');
+            
+            // Animer le fade out après un délai
+            setTimeout(() => {
+                const duration = options.backdropFadeDuration / 1000; // convertir ms en secondes
+                backdrops.forEach(backdrop => {
+                    // Utiliser setProperty avec important pour écraser le CSS
+                    backdrop.style.setProperty('transition', `opacity ${duration}s ease-out, filter ${duration}s ease-out, transform ${duration}s ease-out`);
+                    backdrop.style.setProperty('opacity', '0');
+                    backdrop.style.setProperty('filter', 'blur(10px) brightness(0.7)');
+                    backdrop.style.setProperty('transform', `scale(${options.backdropZoomScale})`);
+                });
+                console.log(`🖼️ Backdrop fade applied with ${duration}s duration and ${options.backdropZoomScale}x zoom!`);
+            }, options.backdropFadeDelay);
+        };
+        
+        tryAnimate();
+    }
+
+    function fadeBackdrop() {
+        console.log('🖼️ Starting backdrop fade sequence');
+        
+        // Attendre que le backdrop soit chargé avec un retry
+        let attempts = 0;
+        const maxAttempts = 30;
+        
+        const tryFade = () => {
+            const backdrop = document.querySelector('.backdropContainer, .backdropImage, .itemBackdrop');
+            
+            if (!backdrop && attempts < maxAttempts) {
+                attempts++;
+                console.log(`⏳ Waiting for backdrop... attempt ${attempts}`);
+                setTimeout(tryFade, 100);
+                return;
+            }
+            
+            if (!backdrop) {
+                console.warn('⚠️ Backdrop not found after max attempts');
+                return;
+            }
+            
+            console.log('✅ Backdrop found, fading out in 500ms...');
+            
+            // Reset d'abord
+            document.body.classList.remove('trailer-playing', 'trailer-returning');
+            
+            // Attendre puis appliquer le fade
+            setTimeout(() => {
+                document.body.classList.add('trailer-playing');
+                console.log('🖼️ Backdrop fade applied!');
+            }, 500);
+        };
+        
+        tryFade();
+    }
+
+    function animateBackdrop() {
+        console.log('🖼️ Starting backdrop fade animation sequence');
+        
+        // Attendre que le backdrop soit chargé avec un retry
+        let attempts = 0;
+        const maxAttempts = 30;
+        
+        const tryAnimate = () => {
+            const backdrop = document.querySelector('.backdropContainer, .backdropImage, .itemBackdrop');
+            
+            if (!backdrop && attempts < maxAttempts) {
+                attempts++;
+                console.log(`⏳ Waiting for backdrop... attempt ${attempts}`);
+                setTimeout(tryAnimate, 100);
+                return;
+            }
+            
+            if (!backdrop) {
+                console.warn('⚠️ Backdrop not found after max attempts');
+                return;
+            }
+            
+            console.log('✅ Backdrop found, fading out in 500ms...');
+            
+            // S'assurer que le backdrop est visible d'abord
+            document.body.classList.remove('trailer-playing');
+            document.body.classList.add('trailer-returning');
+            void backdrop.offsetWidth;
+            
+            // Puis fade vers transparent après un délai
+            setTimeout(() => {
+                document.body.classList.remove('trailer-returning');
+                document.body.classList.add('trailer-playing');
+                console.log('🖼️ Backdrop fade to transparent applied!');
             }, 500);
         };
         
@@ -151,24 +336,23 @@
                 content.appendChild(icon);
                 btn.appendChild(content);
 
-                Object.assign(btn.style, {
-                    position: 'absolute',
-                    top: '20px',
-                    right: '20px',
-                    marginTop: '75px',
-                    marginRight: '45px',
-                    zIndex: 9999,
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    background: 'rgba(0,0,0,0.5)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    opacity: 0,
-                    transition: 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out'
-                });
+                // Appliquer les styles avec important pour forcer
+                btn.style.setProperty('position', 'absolute');
+                btn.style.setProperty('top', '20px');
+                btn.style.setProperty('right', '20px');
+                btn.style.setProperty('margin-top', '75px', 'important');
+                btn.style.setProperty('margin-right', '45px', 'important');
+                btn.style.setProperty('z-index', '0');
+                btn.style.setProperty('width', '48px');
+                btn.style.setProperty('height', '48px');
+                btn.style.setProperty('border-radius', '50%');
+                btn.style.setProperty('background', 'rgba(0,0,0,0.5)');
+                btn.style.setProperty('cursor', 'pointer');
+                btn.style.setProperty('display', 'flex');
+                btn.style.setProperty('justify-content', 'center');
+                btn.style.setProperty('align-items', 'center');
+                btn.style.setProperty('opacity', '0');
+                btn.style.setProperty('transition', 'opacity 0.3s ease-in-out, transform 0.3s ease-in-out');
 
                 btn.addEventListener('click',(e)=>{
                     e.preventDefault(); e.stopPropagation();
@@ -188,7 +372,7 @@
                     requestAnimationFrame(()=>btn.classList.add('spawn-animation'));
                 }
 
-                requestAnimationFrame(()=>btn.style.opacity='1');
+                requestAnimationFrame(()=>btn.style.setProperty('opacity', '1'));
                 return btn;
             }
 
@@ -201,7 +385,7 @@
 
     function removeSoundButton() {
         if(!state.soundButton) return;
-        state.soundButton.style.opacity='0';
+        state.soundButton.style.setProperty('opacity', '0');
         setTimeout(()=>{
             if(state.soundButton?.parentElement) state.soundButton.remove();
             state.soundButton=null;
@@ -236,8 +420,9 @@
             // Crée le bouton son après vidéo
             setTimeout(()=>createSoundButtonWithRetry(state.currentItemId),100);
 
-            // Animation logo
+            // Animation logo et backdrop
             animateLogo();
+            animateBackdrop();
 
             // Fade in video
             setTimeout(()=>{ if(vid?.parentElement) vid.style.opacity='1'; },100);
@@ -254,6 +439,9 @@
         console.log('🧹 Clearing trailer, immediate:', immediate);
         abortCurrentOperation();
         removeSoundButton();
+
+        // Remettre le backdrop visible (reset immédiat)
+        document.body.classList.remove('trailer-playing', 'trailer-returning');
 
         if(!state.videoElement){
             state.currentItemId=null; 
@@ -349,6 +537,11 @@
 
     // ===== INIT =====
     function init(){
+        // Créer l'animation pulse si activée
+        if(options.enablePulseOnButton) {
+            createPulseAnimation();
+        }
+        
         bindEvents();
         
         // initial check

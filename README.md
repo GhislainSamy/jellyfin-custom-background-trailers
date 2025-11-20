@@ -77,6 +77,19 @@ document.head.appendChild(script);
 ### Screenshot
 <img width="598" height="664" alt="image" src="https://github.com/user-attachments/assets/64888e1f-b1fc-4804-8e18-bee26ccc53ed" />
 
+**4. Install custom css (! For Jellyfish theme Only ! )**
+
+- Navigate to Dashboard Settings
+1. Log in as an administrator.  
+2. Go to **Dashboard → General → Custom CSS Code**.
+
+- Add Import Statements
+In the **Custom CSS** field, add all the desired `@import` statements:
+
+```
+@import url("https://cdn.jsdelivr.net/gh/GhislainSamy/jellyfin-custom-background-trailers@main/jellyfish-personnal-fix.css");
+```
+
 ---
 
 ## ⚙️ Configuration

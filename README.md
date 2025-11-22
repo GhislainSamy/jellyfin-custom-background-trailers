@@ -81,7 +81,7 @@ document.head.appendChild(script);
 
 <img width="655" height="844" alt="{42A94ED9-C7EC-44D6-9D23-BA8E0933946D}" src="https://github.com/user-attachments/assets/a479d6bc-a0e6-4eb1-967e-0ff6fb002ba1" />
 
-**4. Install custom css **
+**4. Install custom css**
 
 - Navigate to Dashboard Settings
 1. Log in as an administrator.  
@@ -191,7 +191,7 @@ const options = {
 https://github.com/user-attachments/assets/21945a8f-582a-4016-b090-6468d0a8d6e0
 
 ### Mobile
-soon
+https://github.com/user-attachments/assets/522c35e1-c355-4458-843b-82b84f1a470b
 
 ### What You'll See:
 
@@ -247,6 +247,15 @@ Special thanks to the Jellyfin community for their support and feedback.
 ---
 
 ## 📝 Changelog
+
+### v1.1.0
+- **Sound button fixes:** removed unnecessary `!important` declarations, ensuring proper styling.
+- **Corrected default parameters:** plugin options now reflect intended default behavior.
+- **Backdrop animation improvements:** smooth fade transitions implemented, previous abrupt zoom removed.
+- **Global delay option added:** configurable delay before trailer activation (`globalDelay` and `enableGlobalDelay`).
+- **CSS file separation:** split into `jellyfin-personal-fix.css` and `enhanced-backdrop-trailer.css` for easier customization.
+- **Mobile demo video added:** included a demo video showing plugin behavior on mobile devices.
+
 
 ### v1.0.0
 - Initial release

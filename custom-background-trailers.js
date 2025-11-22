@@ -19,7 +19,7 @@
         backdropFadeDuration: 2000,
         backdropZoomScale: 1.80,
         globalDelay: 1200,
-        enableGlobalDelay: false
+        enableGlobalDelay: true
     };
     
     const options = Object.assign({}, defaultOptions, window.BTPluginOptions || {});
@@ -224,22 +224,22 @@
                 content.appendChild(icon);
                 btn.appendChild(content);
 
-                btn.style.setProperty('position','absolute','important');
-                btn.style.setProperty('top','20px','important');
-                btn.style.setProperty('right','20px','important');
+                btn.style.setProperty('position','absolute');
+                btn.style.setProperty('top','20px');
+                btn.style.setProperty('right','20px');
                 btn.style.setProperty('margin-top','75px','important');
                 btn.style.setProperty('margin-right','45px','important');
-                btn.style.setProperty('z-index','9999','important');
-                btn.style.setProperty('width','48px','important');
-                btn.style.setProperty('height','48px','important');
-                btn.style.setProperty('border-radius','50%','important');
-                btn.style.setProperty('background','rgba(0,0,0,0.5)','important');
-                btn.style.setProperty('cursor','pointer','important');
-                btn.style.setProperty('display','flex','important');
-                btn.style.setProperty('justify-content','center','important');
-                btn.style.setProperty('align-items','center','important');
-                btn.style.setProperty('opacity','0','important');
-                btn.style.setProperty('transition','opacity 0.3s ease-in-out, transform 0.3s ease-in-out','important');
+                btn.style.setProperty('z-index','0');
+                btn.style.setProperty('width','48px');
+                btn.style.setProperty('height','48px');
+                btn.style.setProperty('border-radius','50%');
+                btn.style.setProperty('background','rgba(0,0,0,0.5)');
+                btn.style.setProperty('cursor','pointer');
+                btn.style.setProperty('display','flex');
+                btn.style.setProperty('justify-content','center');
+                btn.style.setProperty('align-items','center');
+                btn.style.setProperty('opacity','0');
+                btn.style.setProperty('transition','opacity 0.3s ease-in-out, transform 0.3s ease-in-out');
 
                 btn.addEventListener('click',(e)=>{
                     e.preventDefault(); e.stopPropagation();

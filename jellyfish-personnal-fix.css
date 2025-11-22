@@ -1,26 +1,23 @@
 
-/* Décaler les infos du films plus bas */
-.layout-desktop .detailPageWrapperContainer {margin-top: 20%;}
-
-/* Désactivé le logo Jellyfish */
+/* Disable Jellyfin logo */
 .layout-desktop .pageTitleWithLogo, .layout-tv .pageTitleWithLogo {display: none;}
 
-/* Désactiver le blur dans l'info du film */
-.backdropContainer {opacity: inherit;}
-.backgroundContainer.withBackdrop {background-color: transparent;}
-
-
-/* Correction thème Jellyfish */
-.layout-desktop .detailPageWrapperContainer:has(.detailImageContainer .portraitCard) .detailPagePrimaryContent {
-    min-height: 31vw !important;
+/* Increase the spacing between the 'Writer & Studio' section and the 'Cast' section */
+.layout-desktop .detailPagePrimaryContainer {
+    padding-bottom: 24px;
 }
 
+/* Reduce the spacing between the cover image and the movie information */
 .layout-desktop .detailPagePrimaryContent {
     padding-left: 18.4vw !important;
 }
 
+/* Move the cover image down slightly to avoid overlapping the backdrop */
 .layout-desktop .detailImageContainer .card {
     top: 11em !important;
 }
 
-.itemDetailsGroup:has(.detailsGroupItem:not(.hide)) {margin-bottom: 22.32px;}
+/* Lower the movie information and title slightly to prevent overlapping the backdrop. */
+.layout-desktop .detailPagePrimaryContainer {
+    padding-top: 30px;
+}

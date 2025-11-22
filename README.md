@@ -39,28 +39,31 @@ This plugin enhances the Jellyfin user interface by automatically playing local 
    - Adjust the parameters to your preferences (see Configuration section below for details)
 
 ```javascript
-// ========== CONFIGURATION ==========
-// Customize these options before loading the plugin
+// ===== OPTIONS =====
 window.BTPluginOptions = {
     // Audio Options
-    trailerMutedByDefault: true,    // Start trailers muted
-    showSoundButton: true,           // Show floating sound control button
-    
+    trailerMutedByDefault: true,      // Start trailers muted
+    showSoundButton: true,            // Show floating sound control button
+
     // Sound Button Options
-    enablePulseOnButton: true,       // Enable pulse animation on button
-    pulseColor: 'rgba(0,150,255,0.7)', // Pulse glow color
-    
+    enablePulseOnButton: true,        // Enable pulse animation on the button
+    pulseColor: 'rgba(0,150,255,0.7)',// Pulse glow color
+
     // Logo Animation Options
-    logoScale: 0.6,                  // Final logo size (0.6 = 60% of original)
-    logoShrinkDelay: 500,            // Delay before shrinking (ms)
-    logoShrinkDuration: 1000,        // Shrink animation duration (ms)
-    logoFadeOpacity: 0.5,            // Final logo opacity (0-1)
-    
+    logoScale: 0.6,                   // Final logo size (0.6 = 60% of original)
+    logoShrinkDelay: 500,             // Delay before shrinking (ms)
+    logoShrinkDuration: 1000,         // Shrink animation duration (ms)
+    logoFadeOpacity: 0.5,             // Final logo opacity (0-1)
+
     // Backdrop Animation Options
-    backdropFadeDelay: 500,          // Delay before backdrop fades (ms)
-    backdropFadeDuration: 1000,      // Fade animation duration (ms)
-    backdropZoomScale: 1.15,         // Backdrop zoom level (1.15 = 115%)
-    backdropTransition: 1000         // General transition duration (ms)
+    backdropTransition: 1000,         // General transition duration (ms)
+    backdropFadeDelay: 1500,          // Delay before backdrop fades (ms)
+    backdropFadeDuration: 2000,       // Fade animation duration (ms)
+    backdropZoomScale: 1.80,          // Backdrop zoom level (1.80 = 180%)
+
+    // Global Delay
+    globalDelay: 1200,                // Global delay before activation (ms)
+    enableGlobalDelay: true           // Enable/disable global delay
 };
 
 // ========== LOAD PLUGIN ==========
@@ -75,9 +78,10 @@ document.head.appendChild(script);
    - Navigate to any movie/show detail page to see the plugin in action
 
 ### Screenshot
-<img width="598" height="664" alt="image" src="https://github.com/user-attachments/assets/64888e1f-b1fc-4804-8e18-bee26ccc53ed" />
 
-**4. Install custom css (! For Jellyfish theme Only ! )**
+<img width="655" height="844" alt="{42A94ED9-C7EC-44D6-9D23-BA8E0933946D}" src="https://github.com/user-attachments/assets/a479d6bc-a0e6-4eb1-967e-0ff6fb002ba1" />
+
+**4. Install custom css **
 
 - Navigate to Dashboard Settings
 1. Log in as an administrator.  
@@ -85,6 +89,12 @@ document.head.appendChild(script);
 
 - Add Import Statements
 In the **Custom CSS** field, add all the desired `@import` statements:
+
+```
+@import url("https://cdn.jsdelivr.net/gh/GhislainSamy/jellyfin-custom-background-trailers@main/enhanced-backdrop-trailer.css");
+```
+
+Include this import statements if you are using the Jellyfish theme :
 
 ```
 @import url("https://cdn.jsdelivr.net/gh/GhislainSamy/jellyfin-custom-background-trailers@main/jellyfish-personnal-fix.css");
@@ -96,39 +106,47 @@ In the **Custom CSS** field, add all the desired `@import` statements:
 
 ### Audio Options
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `trailerMutedByDefault` | boolean | `true` | Whether trailers start muted by default |
-| `showSoundButton` | boolean | `true` | Show/hide the floating sound control button |
+| Parameter               | Type    | Default | Description                                 |
+| ----------------------- | ------- | ------- | ------------------------------------------- |
+| `trailerMutedByDefault` | boolean | `true`  | Whether trailers start muted by default     |
+| `showSoundButton`       | boolean | `true`  | Show/hide the floating sound control button |
 
 ### Sound Button Options
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `enablePulseOnButton` | boolean | `true` | Enable pulse animation when sound button appears |
-| `pulseColor` | string | `'rgba(0,150,255,0.7)'` | Color of the pulse glow effect (supports any CSS color format) |
+| Parameter             | Type    | Default                 | Description                                                    |
+| --------------------- | ------- | ----------------------- | -------------------------------------------------------------- |
+| `enablePulseOnButton` | boolean | `true`                  | Enable pulse animation when sound button appears               |
+| `pulseColor`          | string  | `'rgba(0,150,255,0.7)'` | Color of the pulse glow effect (supports any CSS color format) |
 
 ### Logo Animation Options
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `logoScale` | number | `0.6` | Final size of the logo after shrinking (1 = 100%, 0.6 = 60% of original size) |
-| `logoShrinkDelay` | number | `500` | Delay before logo starts shrinking (in milliseconds) |
-| `logoShrinkDuration` | number | `1000` | Duration of the logo shrink animation (in milliseconds) |
-| `logoFadeOpacity` | number | `0.5` | Final opacity of the logo after animation (0 = invisible, 1 = fully opaque) |
+| Parameter            | Type   | Default | Description                                                                   |
+| -------------------- | ------ | ------- | ----------------------------------------------------------------------------- |
+| `logoScale`          | number | `0.6`   | Final size of the logo after shrinking (1 = 100%, 0.6 = 60% of original size) |
+| `logoShrinkDelay`    | number | `500`   | Delay before logo starts shrinking (in milliseconds)                          |
+| `logoShrinkDuration` | number | `1000`  | Duration of the logo shrink animation (in milliseconds)                       |
+| `logoFadeOpacity`    | number | `0.5`   | Final opacity of the logo after animation (0 = invisible, 1 = fully opaque)   |
 
 ### Backdrop Animation Options
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `backdropFadeDelay` | number | `500` | Delay before backdrop starts fading (in milliseconds) |
-| `backdropFadeDuration` | number | `1000` | Duration of the backdrop fade animation (in milliseconds) |
-| `backdropZoomScale` | number | `1.15` | Zoom level of backdrop during fade (1.15 = 115%, adds subtle zoom effect) |
-| `backdropTransition` | number | `1000` | General backdrop transition duration (in milliseconds) |
+| Parameter              | Type   | Default | Description                                               |
+| ---------------------- | ------ | ------- | --------------------------------------------------------- |
+| `backdropFadeDelay`    | number | `1500`  | Delay before backdrop starts fading (in milliseconds)     |
+| `backdropFadeDuration` | number | `2000`  | Duration of the backdrop fade animation (in milliseconds) |
+| `backdropZoomScale`    | number | `1.80`  | Zoom level of backdrop during fade (1.8 = 180%)           |
+| `backdropTransition`   | number | `1000`  | General backdrop transition duration (in milliseconds)    |
+
+### Global Delay Options
+
+| Parameter           | Type    | Default | Description                                                  |
+| ------------------- | ------- | ------- | ------------------------------------------------------------ |
+| `globalDelay`       | number  | `1200`  | Global delay before trailer activation (in milliseconds)     |
+| `enableGlobalDelay` | boolean | `false` | Enable or disable the global delay before starting a trailer |
 
 ### Example Configurations
 
 **Slow and Cinematic:**
+
 ```javascript
 const options = {
     logoShrinkDelay: 1000,
@@ -141,6 +159,7 @@ const options = {
 ```
 
 **Fast and Subtle:**
+
 ```javascript
 const options = {
     logoShrinkDelay: 200,
@@ -153,6 +172,7 @@ const options = {
 ```
 
 **No Logo Fade, Dramatic Backdrop:**
+
 ```javascript
 const options = {
     logoFadeOpacity: 1, // Logo stays fully visible

@@ -1,0 +1,6 @@
+/* Move the movie information lower */
+.layout-desktop .detailPageWrapperContainer {margin-top: 20%;}
+
+/* Lower the movie info section */
+.backdropContainer {opacity: inherit;}
+.backgroundContainer.withBackdrop {background-color: transparent;}

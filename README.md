@@ -14,8 +14,7 @@ This plugin enhances the Jellyfin user interface by automatically playing local 
 - **Sound Control Button**: Optional floating button with customizable pulse animation to toggle trailer audio
 - **Highly Configurable**: Extensive options to customize timings, animations, colors, and effects
 - **Seamless Transitions**: Reliable animations that work consistently across navigation
-- **Lightweight**: All-in-one JavaScript solution with no external CSS files required
-
+  
 ## 📋 Prerequisites
 
 - Jellyfin server with web interface access

@@ -148,39 +148,39 @@ Include this import statements if you are using the Jellyfish theme :
 **Slow and Cinematic:**
 
 ```javascript
-const options = {
+
     logoShrinkDelay: 1000,
     logoShrinkDuration: 2000,
     logoFadeOpacity: 0.3,
     backdropFadeDelay: 1000,
     backdropFadeDuration: 2000,
     pulseColor: 'rgba(138,43,226,0.7)' // Purple glow
-};
+
 ```
 
 **Fast and Subtle:**
 
 ```javascript
-const options = {
+
     logoShrinkDelay: 200,
     logoShrinkDuration: 500,
     logoFadeOpacity: 0.7,
     backdropFadeDelay: 200,
     backdropFadeDuration: 500,
     backdropZoomScale: 1.05
-};
+
 ```
 
 **No Logo Fade, Dramatic Backdrop:**
 
 ```javascript
-const options = {
+
     logoFadeOpacity: 1, // Logo stays fully visible
     backdropFadeDelay: 0,
     backdropFadeDuration: 1500,
     backdropZoomScale: 1.3,
     pulseColor: 'rgba(255,0,0,0.7)' // Red glow
-};
+
 ```
 
 ---
